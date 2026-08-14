@@ -1,0 +1,9 @@
+[tools]
+terraform = "1.12"
+kubectl = "1.31"
+helm = "3.16"
+argocd = "2.13"
+go = "1.23"
+node = "24"
+gh = "2.63"
+

@@ -1,0 +1,16 @@
+{
+  "name": "notion-sync",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "test-connection": "tsx src/test-connection.ts"
+  },
+  "dependencies": {
+    "@notionhq/client": "^2.2.15"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "dotenv": "^16.4.5"
+  }
+}
