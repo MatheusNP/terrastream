@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# Instala/atualiza o k3s de forma idempotente. Renderizado pelo Terraform.
+# Roda na VM como root.
+set -euo pipefail
+
+K3S_VERSION="${k3s_version}"
+CONFIG=/etc/rancher/k3s/config.yaml
+
+echo "==> Escrevendo $CONFIG"
+mkdir -p /etc/rancher/k3s
+cat > "$CONFIG.new" <<'K3S_CONFIG'
+${config}
+K3S_CONFIG
+
+CONFIG_CHANGED=0
+if ! cmp -s "$CONFIG.new" "$CONFIG"; then
+  mv "$CONFIG.new" "$CONFIG"
+  CONFIG_CHANGED=1
+else
+  rm -f "$CONFIG.new"
+fi
+
+if command -v k3s >/dev/null 2>&1 && k3s --version | grep -qF "$K3S_VERSION"; then
+  echo "==> k3s $K3S_VERSION já instalado"
+  if [ "$CONFIG_CHANGED" = "1" ]; then
+    echo "==> Config mudou, reiniciando k3s"
+    systemctl restart k3s
+  fi
+else
+  echo "==> Instalando k3s $K3S_VERSION"
+  curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="$K3S_VERSION" sh -s - server
+fi
+
+echo "==> Aguardando o nó ficar Ready"
+for i in $(seq 1 60); do
+  if k3s kubectl get nodes 2>/dev/null | grep -q ' Ready'; then
+    break
+  fi
+  sleep 5
+done
+k3s kubectl wait --for=condition=Ready node --all --timeout=30s
+
+echo "==> Estado do cluster"
+k3s kubectl get nodes -o wide
+k3s kubectl get pods -A
