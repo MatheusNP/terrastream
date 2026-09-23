@@ -1,0 +1,3 @@
+compartment_id            = "ocid1.tenancy.oc1..xxxxxxxxxxxx"
+oci_region                = "sa-saopaulo-1"
+availability_domain_index = 0
