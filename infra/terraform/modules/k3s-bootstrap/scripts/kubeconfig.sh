@@ -21,7 +21,7 @@ cat <<EOF
 Kubeconfig salvo em: $OUT
 
 1) Abra o tunnel (deixe rodando em OUTRO terminal):
-   ssh -i $KEY -N -L 6443:127.0.0.1:6443 $SSH_USER@$HOST
+   ssh -i $KEY -N -o ServerAliveInterval=15 -o ServerAliveCountMax=3 -L 6443:127.0.0.1:6443 $SSH_USER@$HOST
 
 2) Neste terminal:
    export KUBECONFIG=$OUT
