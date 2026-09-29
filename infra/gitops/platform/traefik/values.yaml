@@ -1,0 +1,13 @@
+ingressClass:
+  enabled: true
+  isDefaultClass: true
+service:
+  type: LoadBalancer   # o servicelb do k3s faz o bind de 80/443 no host
+ports:
+  web:
+    exposedPort: 80
+  websecure:
+    exposedPort: 443
+resources:
+  requests: { cpu: 50m, memory: 64Mi }
+  limits: { memory: 192Mi }
