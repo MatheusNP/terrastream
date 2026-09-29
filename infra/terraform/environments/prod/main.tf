@@ -20,3 +20,13 @@ module "k3s" {
 output "vm_public_ip" {
   value = module.vm.public_ip
 }
+
+module "argocd" {
+  source        = "../../modules/argocd-bootstrap"
+  chart_version = "10.9.2"
+  repo_url      = "https://github.com/MatheusNP/terrastream.git"
+}
+
+output "argocd_admin_password_cmd" {
+  value = module.argocd.get_initial_admin_password_cmd
+}
